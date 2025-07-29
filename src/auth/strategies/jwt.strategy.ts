@@ -1,7 +1,7 @@
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { User } from "../entities/user.entity";
-import { JwtPayload } from "../interfaces/jwt-payload.interface";
+import { JwtPayload } from "../interfaces/";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ConfigService } from "@nestjs/config";
@@ -29,9 +29,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     async validate(payload: JwtPayload) {
 
-        const { email } = payload;
+        const { id } = payload;
 
-        const user = await this.userRepository.findOne({ where: { email } });
+        const user = await this.userRepository.findOne({ where: { id } });
         if (!user) { throw new Error('No user found'); }
 
         if (!user.isActive) { throw new Error('User is not active'); }

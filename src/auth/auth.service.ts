@@ -5,7 +5,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
-import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { JwtPayload } from './interfaces/';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -33,7 +33,7 @@ export class AuthService {
 
       return {
         ...userWithoutPassword,
-        token: this.getJWTToken({ email: user.email }),
+        token: this.getJWTToken({ id: user.id }),
       }
 
 
@@ -48,7 +48,7 @@ export class AuthService {
 
       const user = await this.userRepository.findOne({
         where: { email },
-        select: { email: true, password: true },
+        select: { email: true, password: true, id: true },
       });
 
       if (!user) { throw new UnauthorizedException('User or password is incorrect'); }
@@ -58,7 +58,7 @@ export class AuthService {
 
       return {
         ...user,
-        token: this.getJWTToken({ email: user.email }),
+        token: this.getJWTToken({ id: user.id }),
       };
 
     } catch (error) {
